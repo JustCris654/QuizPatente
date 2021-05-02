@@ -7,7 +7,7 @@ package com.justcris.QuizPatente.beans;
 public class UserData {
     private String username;
     private boolean renewal;
-    private int score;
+    private double score;
 
     public UserData() {
     }
@@ -28,11 +28,11 @@ public class UserData {
         this.renewal = renewal;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 }

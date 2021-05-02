@@ -4,6 +4,7 @@
 
 package com.justcris.QuizPatente;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.sql.*;
@@ -28,9 +29,7 @@ public class AccessDatabase {
             Class.forName(JDBC_DRIVER);
 
             //Open database connection
-            System.out.println("Connecting to database...");
             _conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
 
 
         } catch (Exception e) {
@@ -83,12 +82,48 @@ public class AccessDatabase {
         }
     }
 
+    // given the username return the associated user id
+    public int GetIdUtente(String username) {
+        try {
+            String sql = "SELECT Id FROM patente.utenti WHERE username='" + username + "'";
+            Statement statement = _conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if(resultSet.next()){
+                return resultSet.getInt("Id");
+            }
+            return -1;
+        } catch (Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    public boolean CompileQuiz(String username, ArrayList<Pair<Integer, Boolean>> answers){
+        int id = GetIdUtente(username);
+        if(id == -1) return false;              // return false if the username doesnt exists in the 'utenti' table
+
+        try {
+            StringBuilder sql = new StringBuilder("INSERT INTO patente.compilazione (id_username, id_domanda, risp_utente)" +
+                    "VALUES ");
+            for (Pair<Integer, Boolean> num_answer:
+                    answers) {
+                sql.append("(").append(id).append(", ").append(num_answer.getL()).append(", ").append(num_answer.getR()?"'V'":"'F'").append("),");
+            }
+            sql.deleteCharAt( sql.length() - 1 );
+            Statement statement = _conn.createStatement();
+            statement.executeUpdate(sql.toString());
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean AddUser(String username){
         try {
-            String sql = "INSERT INTO patente.utenti (username)\n" +
-                    "VALUES " + username;
+            String sql = "INSERT INTO patente.utenti (username) " +
+                    "VALUES ('" + username+"')";
             Statement statement = _conn.createStatement();
-            statement.executeQuery(sql);
+            statement.executeUpdate(sql);
             return true;
         } catch (Exception e){
             e.printStackTrace();

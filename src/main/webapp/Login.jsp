@@ -10,6 +10,7 @@
 --%>
 <%@page import="com.justcris.QuizPatente.Quiz" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.justcris.QuizPatente.AccessDatabase" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -38,11 +39,14 @@
         Quiz quiz = new Quiz();
         quiz.PopulateQuiz();
         ArrayList<Integer> quizNums = quiz.GenerateQuiz(renewal);
-        int questionNum = 0;
+        AccessDatabase accessDatabase = new AccessDatabase();
+        int questionNum = 1;
         session.setAttribute("quizNums", quizNums);
         session.setAttribute("quiz", quiz);
         session.setAttribute("num", questionNum);
+        session.setAttribute("db", accessDatabase);
 
+        accessDatabase.AddUser(username);
         String redirect = "http://localhost:8080/QuizPatente_war_exploded/Quiz.jsp";
         response.sendRedirect(redirect);
     }

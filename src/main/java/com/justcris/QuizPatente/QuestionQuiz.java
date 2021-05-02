@@ -20,7 +20,7 @@ public class QuestionQuiz {
         this._question = _question;
     }
 
-    public boolean is_answer() {
+    public boolean get_answer() {
         return _answer;
     }
 

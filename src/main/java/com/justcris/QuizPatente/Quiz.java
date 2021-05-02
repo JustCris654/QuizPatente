@@ -31,8 +31,7 @@ public class Quiz {
             list.add(i);
         }
         Collections.shuffle(list);
-        ArrayList<Integer> nums = new ArrayList<>(list.subList(0, _renewal ? 4 : 9));
-        return nums;
+        return new ArrayList<>(list.subList(0, _renewal ? 5 : 10));
     }
 
     public QuestionQuiz GetQuestionQuiz(int i) {
@@ -40,6 +39,6 @@ public class Quiz {
     }
 
     public boolean GetAnswer(int i) {
-        return _answers.get(i);
+        return _quiz.get(i).get_answer();
     }
 }
